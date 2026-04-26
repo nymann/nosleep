@@ -37,8 +37,6 @@ launchctl bootout gui/$(id -u)/dev.nymann.nosleep
 rm ~/Library/LaunchAgents/dev.nymann.nosleep.plist
 ```
 
-Logs land in `/tmp/nosleep.out.log` and `/tmp/nosleep.err.log`.
-
 ## Notes
 
 - The plist hardcodes the path to `nosleep.swift`. If you move the repo, edit `dev.nymann.nosleep.plist` accordingly.

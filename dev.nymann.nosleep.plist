@@ -18,9 +18,5 @@
     </dict>
     <key>ProcessType</key>
     <string>Interactive</string>
-    <key>StandardOutPath</key>
-    <string>/tmp/nosleep.out.log</string>
-    <key>StandardErrorPath</key>
-    <string>/tmp/nosleep.err.log</string>
 </dict>
 </plist>
