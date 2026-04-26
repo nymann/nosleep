@@ -6,8 +6,7 @@
     <string>dev.nymann.nosleep</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/bin/swift</string>
-        <string>/Users/knj/code/github.com/nymann/nosleep/nosleep.swift</string>
+        <string>/Applications/nosleep.app/Contents/MacOS/nosleep</string>
     </array>
     <key>RunAtLoad</key>
     <true/>

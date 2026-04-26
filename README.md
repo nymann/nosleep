@@ -11,23 +11,31 @@ Left-click the menu bar icon to toggle. Right-click for a Quit menu.
 
 ## Requirements
 
-- macOS
-- Xcode command line tools (`xcode-select --install`) — provides `/usr/bin/swift`.
+- macOS 11+
+- Xcode command line tools (`xcode-select --install`) — provides `swiftc` and `iconutil`.
 
-## Run it once
+## Build
 
 ```sh
-swift nosleep.swift
+./build.sh
 ```
+
+Produces `nosleep.app` in the project directory. Drag it to `/Applications` (or `~/Applications`) to install:
+
+```sh
+cp -R nosleep.app /Applications/
+```
+
+`nosleep` is now searchable in Spotlight.
 
 ## Auto-start at login
 
-Install the LaunchAgent:
+The shipped `dev.nymann.nosleep.plist` expects the app at `/Applications/nosleep.app`. Adjust the path inside if you installed it elsewhere, then:
 
 ```sh
 cp dev.nymann.nosleep.plist ~/Library/LaunchAgents/
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/dev.nymann.nosleep.plist
-launchctl kickstart -k gui/$(id -u)/dev.nymann.nosleep
+launchctl kickstart gui/$(id -u)/dev.nymann.nosleep
 ```
 
 Uninstall:
@@ -39,6 +47,7 @@ rm ~/Library/LaunchAgents/dev.nymann.nosleep.plist
 
 ## Notes
 
-- The plist hardcodes the path to `nosleep.swift`. If you move the repo, edit `dev.nymann.nosleep.plist` accordingly.
 - `KeepAlive` is set to `SuccessfulExit: false`, so quitting via the menu won't auto-respawn — only crashes do.
-- For faster startup, compile once with `swiftc nosleep.swift -o nosleep` and point the plist's `ProgramArguments` at the binary.
+- The app is ad-hoc codesigned during build (`codesign --sign -`), enough for local use without entitlements.
+- `LSUIElement` is set, so there's no Dock icon — only the menu bar item.
+- Run `swift nosleep.swift` directly during development to skip the bundle build.
