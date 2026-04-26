@@ -13,41 +13,38 @@ Left-click the menu bar icon to toggle. Right-click for a Quit menu.
 
 - macOS 11+
 - Xcode command line tools (`xcode-select --install`) — provides `swiftc` and `iconutil`.
+- [`just`](https://github.com/casey/just) — `brew install just`.
 
-## Build
+## Quick start
 
 ```sh
-./build.sh
+just install        # build nosleep.app and copy it to /Applications
+just agent-install  # auto-start at login via launchd
 ```
 
-Produces `nosleep.app` in the project directory. Drag it to `/Applications` (or `~/Applications`) to install:
+`nosleep` is now searchable in Spotlight, and the menu bar icon will reappear at every login.
 
-```sh
-cp -R nosleep.app /Applications/
+## All recipes
+
+```
+just build            Build nosleep.app in the project directory
+just install          Build, then copy nosleep.app to /Applications
+just uninstall        Remove nosleep.app from /Applications
+just run              Run the script directly (skips bundle build)
+just agent-install    Install the LaunchAgent so nosleep starts at login
+just agent-restart    Restart the LaunchAgent (use after rebuilding)
+just agent-uninstall  Uninstall the LaunchAgent
+just clean            Remove build artifacts
 ```
 
-`nosleep` is now searchable in Spotlight.
-
-## Auto-start at login
-
-The shipped `dev.nymann.nosleep.plist` expects the app at `/Applications/nosleep.app`. Adjust the path inside if you installed it elsewhere, then:
+After editing the source, the typical loop is:
 
 ```sh
-cp dev.nymann.nosleep.plist ~/Library/LaunchAgents/
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/dev.nymann.nosleep.plist
-launchctl kickstart gui/$(id -u)/dev.nymann.nosleep
-```
-
-Uninstall:
-
-```sh
-launchctl bootout gui/$(id -u)/dev.nymann.nosleep
-rm ~/Library/LaunchAgents/dev.nymann.nosleep.plist
+just install agent-restart
 ```
 
 ## Notes
 
 - `KeepAlive` is set to `SuccessfulExit: false`, so quitting via the menu won't auto-respawn — only crashes do.
-- The app is ad-hoc codesigned during build (`codesign --sign -`), enough for local use without entitlements.
+- The bundle is ad-hoc codesigned (`codesign --sign -`), enough for local use without entitlements.
 - `LSUIElement` is set, so there's no Dock icon — only the menu bar item.
-- Run `swift nosleep.swift` directly during development to skip the bundle build.
